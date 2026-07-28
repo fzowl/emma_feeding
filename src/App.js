@@ -27,6 +27,7 @@ import "react-vertical-timeline-component/style.min.css";
 const App = ({ signOut }) => {
   const dt = new Date();
   const dtString = dt.toLocaleDateString('hu-HU');
+  const todayISO = dt.toISOString().split('T')[0];
 
   const [stocks, setStocks] = useState([]);
   const [feeds, setFeeds] = useState([]);
@@ -126,8 +127,14 @@ const App = ({ signOut }) => {
     event.target.reset();
   }
 
+  const todayFeeds = feeds.filter((feed) => feed.feedAt === todayISO);
+  const todayStocksLeft = stocks.reduce((sum, stock) => sum + (stock.remaining || 0), 0);
+  const lastFeed = todayFeeds
+    .map((feed) => feed.name)
+    .slice(-1)[0];
+
   return (
-    <View className="App">
+    <View className="App" style={{ paddingBottom: "4rem" }}>
       <Flex direction="row" justifyContent="center" wrap="wrap">
         <Heading level={1}>Emma feed tracking app</Heading>
         <Button onClick={signOut}>Sign Out</Button>
@@ -256,6 +263,28 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Flex
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          wrap="wrap"
+          gap="2rem"
+        >
+          <Text as="span">
+            <strong>Today ({todayISO})</strong>
+          </Text>
+          <Text as="span">
+            Feeds today: <strong>{todayFeeds.length}</strong>
+          </Text>
+          <Text as="span">
+            Last feed: <strong>{lastFeed || "—"}</strong>
+          </Text>
+          <Text as="span">
+            Stock portions left: <strong>{todayStocksLeft}</strong>
+          </Text>
+        </Flex>
+      </View>
     </View>
   );
 };
