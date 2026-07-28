@@ -24,10 +24,17 @@ import {
 import "react-vertical-timeline-component/style.min.css";
 
 
+const toLocalISODate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const App = ({ signOut }) => {
   const dt = new Date();
   const dtString = dt.toLocaleDateString('hu-HU');
-  const todayISO = dt.toISOString().split('T')[0];
+  const todayISO = toLocalISODate(dt);
 
   const [stocks, setStocks] = useState([]);
   const [feeds, setFeeds] = useState([]);
@@ -93,7 +100,7 @@ const App = ({ signOut }) => {
       remaining: stock.remaining,
     };
     const feedData = {
-      feedAt: date.toISOString().split('T')[0],
+      feedAt: toLocalISODate(date),
       name: `${stock.name} (${stock.madeAt})`,
       comment: stock.comment
     };
