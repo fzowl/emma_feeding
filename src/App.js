@@ -27,6 +27,7 @@ import "react-vertical-timeline-component/style.min.css";
 const App = ({ signOut }) => {
   const dt = new Date();
   const dtString = dt.toLocaleDateString('hu-HU');
+  const todayISO = dt.toISOString().split('T')[0];
 
   const [stocks, setStocks] = useState([]);
   const [feeds, setFeeds] = useState([]);
@@ -125,6 +126,13 @@ const App = ({ signOut }) => {
     fetchFeeds();
     event.target.reset();
   }
+
+  const todaysFeeds = feeds.filter((feed) => feed.feedAt === todayISO);
+  const totalRemaining = stocks.reduce(
+    (sum, stock) => sum + (stock.remaining || 0),
+    0
+  );
+  const lastFeed = todaysFeeds[todaysFeeds.length - 1];
 
   return (
     <View className="App">
@@ -256,6 +264,31 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Heading level={4} margin="0 0 0.5rem 0">
+          Mai étkezés ({dtString})
+        </Heading>
+        <Flex
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          wrap="wrap"
+          gap="1.5rem"
+        >
+          <Text as="span">
+            <strong>Etetések ma:</strong> {todaysFeeds.length}
+          </Text>
+          <Text as="span">
+            <strong>Utolsó:</strong>{" "}
+            {lastFeed
+              ? `${lastFeed.name}${lastFeed.comment ? ` (${lastFeed.comment})` : ""}`
+              : "még nincs"}
+          </Text>
+          <Text as="span">
+            <strong>Maradék adag raktáron:</strong> {totalRemaining}
+          </Text>
+        </Flex>
+      </View>
     </View>
   );
 };
