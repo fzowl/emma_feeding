@@ -32,9 +32,16 @@
   position: sticky;
   bottom: 0;
   margin-top: 3rem;
-  padding: 1rem;
+  padding: 2.5rem 1.5rem;
+  min-height: 220px;
+  font-size: 1.35rem;
+  line-height: 1.6;
   background-color: rgba(120, 120, 120, 0.08);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.App-footer .amplify-heading {
+  font-size: 2rem;
 }
 
 .App-footer .amplify-flex {
