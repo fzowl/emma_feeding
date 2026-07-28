@@ -27,10 +27,17 @@ import "react-vertical-timeline-component/style.min.css";
 const App = ({ signOut }) => {
   const dt = new Date();
   const dtString = dt.toLocaleDateString('hu-HU');
+  const todayISO = dt.toISOString().split('T')[0];
 
   const [stocks, setStocks] = useState([]);
   const [feeds, setFeeds] = useState([]);
   const [feedsSum, setFeedsSum] = useState([]);
+
+  const todaysFeeds = feeds.filter((feed) => feed.feedAt === todayISO);
+  const stockRemaining = stocks.reduce(
+    (sum, stock) => sum + (stock.remaining || 0),
+    0
+  );
 
   useEffect(() => {
     fetchStocks();
@@ -256,6 +263,30 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Flex
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          wrap="wrap"
+          gap="1.5rem"
+        >
+          <Text as="span">
+            <strong>Ma ({dtString})</strong>
+          </Text>
+          <Text as="span">
+            Etetések ma: <strong>{todaysFeeds.length}</strong>
+          </Text>
+          <Text as="span">
+            {todaysFeeds.length > 0
+              ? todaysFeeds.map((feed) => feed.name).join(", ")
+              : "Ma még nem volt etetés"}
+          </Text>
+          <Text as="span">
+            Maradék készlet: <strong>{stockRemaining}</strong>
+          </Text>
+        </Flex>
+      </View>
     </View>
   );
 };
