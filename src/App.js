@@ -27,6 +27,7 @@ import "react-vertical-timeline-component/style.min.css";
 const App = ({ signOut }) => {
   const dt = new Date();
   const dtString = dt.toLocaleDateString('hu-HU');
+  const todayKey = dt.toISOString().split('T')[0];
 
   const [stocks, setStocks] = useState([]);
   const [feeds, setFeeds] = useState([]);
@@ -125,6 +126,14 @@ const App = ({ signOut }) => {
     fetchFeeds();
     event.target.reset();
   }
+
+  const todaysFeeds = feeds.filter((feed) => feed.feedAt === todayKey);
+  const todaysCount = todaysFeeds.length;
+  const todaysNames = todaysFeeds.map((feed) => feed.name).join(", ");
+  const stockRemaining = stocks.reduce(
+    (sum, stock) => sum + (stock.remaining || 0),
+    0
+  );
 
   return (
     <View className="App">
@@ -256,6 +265,20 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Text as="strong" fontWeight={700}>
+          Today ({dtString})
+        </Text>
+        <Flex direction="row" justifyContent="center" wrap="wrap" gap="2rem">
+          <Text as="span">Feeds today: {todaysCount}</Text>
+          <Text as="span">Stock remaining: {stockRemaining}</Text>
+        </Flex>
+        {todaysCount > 0 && (
+          <Text as="span" className="App-footer-detail">
+            {todaysNames}
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
