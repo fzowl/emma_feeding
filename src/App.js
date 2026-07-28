@@ -27,6 +27,7 @@ import "react-vertical-timeline-component/style.min.css";
 const App = ({ signOut }) => {
   const dt = new Date();
   const dtString = dt.toLocaleDateString('hu-HU');
+  const todayIso = dt.toISOString().split('T')[0];
 
   const [stocks, setStocks] = useState([]);
   const [feeds, setFeeds] = useState([]);
@@ -125,6 +126,13 @@ const App = ({ signOut }) => {
     fetchFeeds();
     event.target.reset();
   }
+
+  const todaysFeeds = feeds.filter((feed) => feed.feedAt === todayIso);
+  const lastFeed = todaysFeeds.reduce((latest, feed) => {
+    if (!feed.createdAt) return latest;
+    if (!latest || !latest.createdAt) return feed;
+    return feed.createdAt > latest.createdAt ? feed : latest;
+  }, null);
 
   return (
     <View className="App">
@@ -256,6 +264,30 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Heading level={4} margin="0 0 0.5rem 0">
+          Today's feeding ({dtString})
+        </Heading>
+        <Flex direction="row" justifyContent="center" wrap="wrap" gap="1.5rem">
+          <Text as="span">
+            <Text as="strong" fontWeight={700}>Feeds today: </Text>
+            {todaysFeeds.length}
+          </Text>
+          <Text as="span">
+            <Text as="strong" fontWeight={700}>Last feed: </Text>
+            {lastFeed
+              ? `${lastFeed.name}${lastFeed.comment ? ` (${lastFeed.comment})` : ""}`
+              : "none yet"}
+          </Text>
+        </Flex>
+        {todaysFeeds.length > 0 && (
+          <Text as="p" margin="0.5rem 0 0 0" fontSize="0.9rem">
+            {todaysFeeds
+              .map((feed) => `${feed.name}${feed.comment ? ` (${feed.comment})` : ""}`)
+              .join(" • ")}
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
