@@ -27,6 +27,7 @@ import "react-vertical-timeline-component/style.min.css";
 const App = ({ signOut }) => {
   const dt = new Date();
   const dtString = dt.toLocaleDateString('hu-HU');
+  const todayISO = dt.toISOString().split('T')[0];
 
   const [stocks, setStocks] = useState([]);
   const [feeds, setFeeds] = useState([]);
@@ -125,6 +126,10 @@ const App = ({ signOut }) => {
     fetchFeeds();
     event.target.reset();
   }
+
+  const todaySummary = feedsSum.find((item) => item.date === todayISO);
+  const todayItems = todaySummary ? todaySummary.items : [];
+  const stockRemaining = stocks.reduce((sum, stock) => sum + (stock.remaining || 0), 0);
 
   return (
     <View className="App">
@@ -256,6 +261,26 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Heading level={3}>Today ({todayISO})</Heading>
+        <Flex direction="row" justifyContent="center" wrap="wrap">
+          <Text as="span">
+            <Text as="strong" fontWeight={700}>Feeds today:</Text> {todayItems.length}
+          </Text>
+          <Text as="span">
+            <Text as="strong" fontWeight={700}>Stock remaining:</Text> {stockRemaining}
+          </Text>
+        </Flex>
+        {todayItems.length > 0 ? (
+          <Flex direction="column" alignItems="center">
+            {todayItems.map((it, index) => (
+              <Text as="span" key={index}>{it}</Text>
+            ))}
+          </Flex>
+        ) : (
+          <Text as="span">No feeds recorded today yet.</Text>
+        )}
+      </View>
     </View>
   );
 };
