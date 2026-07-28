@@ -1,5 +1,22 @@
 .App {
   text-align: center;
+  padding-bottom: 5rem;
+}
+
+.App-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #282c34;
+  color: white;
+  padding: 1rem;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.App-footer .amplify-text {
+  color: white;
 }
 
 .App-logo {
