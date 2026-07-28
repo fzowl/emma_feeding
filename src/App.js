@@ -126,6 +126,16 @@ const App = ({ signOut }) => {
     event.target.reset();
   }
 
+  const todayISO = dt.toISOString().split("T")[0];
+  const todayFeeds = feeds.filter((feed) => feed.feedAt === todayISO);
+  const todayItems = todayFeeds.map((feed) =>
+    feed.comment ? `${feed.name} (${feed.comment})` : feed.name
+  );
+  const totalRemaining = stocks.reduce(
+    (sum, stock) => sum + (stock.remaining || 0),
+    0
+  );
+
   return (
     <View className="App">
       <Flex direction="row" justifyContent="center" wrap="wrap">
@@ -256,6 +266,32 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Flex
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          wrap="wrap"
+          gap="1rem"
+        >
+          <Text as="span" className="App-footer-title" color="inherit">
+            Today ({todayISO})
+          </Text>
+          <Text as="span" color="inherit">
+            Feeds today:{" "}
+            <span className="App-footer-stat">{todayFeeds.length}</span>
+          </Text>
+          <Text as="span" color="inherit">
+            Stock remaining:{" "}
+            <span className="App-footer-stat">{totalRemaining}</span>
+          </Text>
+          {todayItems.length > 0 && (
+            <Text as="span" className="App-footer-items" color="inherit">
+              {todayItems.join(" · ")}
+            </Text>
+          )}
+        </Flex>
+      </View>
     </View>
   );
 };

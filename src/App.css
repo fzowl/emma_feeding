@@ -28,6 +28,33 @@
   color: #61dafb;
 }
 
+.App-footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: #047d95;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 0.95rem;
+}
+
+.App-footer .App-footer-title {
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.App-footer .App-footer-stat {
+  font-weight: 700;
+}
+
+.App-footer .App-footer-items {
+  opacity: 0.9;
+  font-size: 0.85rem;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
