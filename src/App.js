@@ -126,6 +126,10 @@ const App = ({ signOut }) => {
     event.target.reset();
   }
 
+  const todayKey = new Date().toISOString().split("T")[0];
+  const todayFeed = feedsSum.find((f) => f.date === todayKey);
+  const todayItems = todayFeed ? todayFeed.items : [];
+
   return (
     <View className="App">
       <Flex direction="row" justifyContent="center" wrap="wrap">
@@ -256,6 +260,27 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Flex
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          wrap="wrap"
+          gap="0.5rem 1.5rem"
+        >
+          <Text as="strong" fontWeight={700}>
+            Today ({todayKey})
+          </Text>
+          <Text as="span">
+            {todayItems.length} feed{todayItems.length === 1 ? "" : "s"}
+          </Text>
+          <Text as="span">
+            {todayItems.length > 0
+              ? todayItems.join(" · ")
+              : "No feeds yet today"}
+          </Text>
+        </Flex>
+      </View>
     </View>
   );
 };
