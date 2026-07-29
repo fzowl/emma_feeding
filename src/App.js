@@ -27,6 +27,7 @@ import "react-vertical-timeline-component/style.min.css";
 const App = ({ signOut }) => {
   const dt = new Date();
   const dtString = dt.toLocaleDateString('hu-HU');
+  const todayISO = dt.toISOString().split('T')[0];
 
   const [stocks, setStocks] = useState([]);
   const [feeds, setFeeds] = useState([]);
@@ -125,6 +126,13 @@ const App = ({ signOut }) => {
     fetchFeeds();
     event.target.reset();
   }
+
+  const todayFeeds = feeds.filter((feed) => feed.feedAt === todayISO);
+  const todayFeedCount = todayFeeds.length;
+  const remainingStock = stocks.reduce(
+    (sum, stock) => sum + (stock.remaining || 0),
+    0
+  );
 
   return (
     <View className="App">
@@ -256,6 +264,39 @@ const App = ({ signOut }) => {
           </React.Fragment>
         ))}
       </VerticalTimeline>
+      <View as="footer" className="App-footer">
+        <Flex
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          wrap="wrap"
+          gap="2rem"
+        >
+          <Text as="span">
+            <Text as="strong" fontWeight={700}>
+              Today:
+            </Text>{" "}
+            {dtString}
+          </Text>
+          <Text as="span">
+            <Text as="strong" fontWeight={700}>
+              Feeds today:
+            </Text>{" "}
+            {todayFeedCount}
+          </Text>
+          <Text as="span">
+            <Text as="strong" fontWeight={700}>
+              Stock remaining:
+            </Text>{" "}
+            {remainingStock}
+          </Text>
+        </Flex>
+        {todayFeedCount > 0 && (
+          <Text as="p" className="App-footer-detail">
+            {todayFeeds.map((feed) => `${feed.name} (${feed.comment})`).join(", ")}
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
